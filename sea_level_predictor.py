@@ -8,28 +8,27 @@ def draw_plot():
     df = pd.read_csv('epa-sea-level.csv')
 
     # Create scatter plot
-    plt.scatter(df['Year'], df['CSIRO Adjusted Sea Level'])
+    fig, ax = plt.subplots(figsize=(10, 6), dpi=100)
+    plt.scatter(data=df, x='Year', y='CSIRO Adjusted Sea Level')
 
     # Create first line of best fit
-    lineA = linregress(df['Year'], df['CSIRO Adjusted Sea Level'])
-    xA = np.arange(df['Year'].min(),2050,1)
-    yA = xA*lineA.slope + lineA.intercept
-
-    plt.plot(xA,yA)
+    a = linregress(x=df['Year'], y=df['CSIRO Adjusted Sea Level'])
+    x1 = np.arange(1880,2051)
+    y1 = x*a.slope + a.intercept
+    plt.plot(x1,y1)
 
     # Create second line of best fit
-    df_2000 = df[df['Year'] >= 2000]
+    df_new = df[df.Year>=2000]
+    b = linregress(x=df_new['Year'], y=df_new['CSIRO Adjusted Sea Level'])
+    x2 = np.arange(2000,2051)
+    y2 = x*b.slope + b.intercept
+    plt.plot(x2,y2);
 
-    lineB = linregress(df_2000['Year'], df_2000['CSIRO Adjusted Sea Level'])
-    xB = np.arange(2000,2050,1)
-    yB = xB*lineB.slope + lineB.intercept
-
-    plt.plot(xB,yB)
 
     # Add labels and title
-    plt.xlabel('Year')
-    plt.ylabel('Sea Level (inches)')
-    plt.title('Rise in Sea Level')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Sea level (inches)')
+    ax.set_title('Rise in sea level')
     
     # Save plot and return data for testing (DO NOT MODIFY)
     plt.savefig('sea_level_plot.png')
